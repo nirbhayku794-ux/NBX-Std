@@ -1,461 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NBX Studio — Video Editing Agency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#080808;
-  --surface:#111111;
-  --surface2:#1a1a1a;
-  --accent:#c8a96e;
-  --accent2:#e8c98e;
-  --text:#f0ece4;
-  --muted:#7a756c;
-  --border:rgba(200,169,110,0.15);
+  --bg:#060608;
+  --surface:#0e0e12;
+  --surface2:#16161c;
+  --surface3:#1e1e26;
+  --gold:#d4a853;
+  --gold2:#f0c97a;
+  --text:#f4f0ea;
+  --muted:#6e6a62;
+  --muted2:#9a9590;
+  --border:rgba(212,168,83,0.12);
+  --border2:rgba(212,168,83,0.28);
 }
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none;}
 
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;}
+.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(212,168,83,0.5);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.1s ease;}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.5rem 4rem;border-bottom:0.5px solid var(--border);background:rgba(8,8,8,0.85);backdrop-filter:blur(12px);}
-.logo{font-family:'Playfair Display',serif;font-size:1.1rem;letter-spacing:0.05em;color:var(--accent);}
-.nav-links{display:flex;gap:2.5rem;}
-.nav-links a{text-decoration:none;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);transition:color 0.3s;}
-.nav-links a:hover{color:var(--accent);}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
 
-#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:8rem 4rem 4rem;}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(200,169,110,0.06) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(200,169,110,0.04) 0%,transparent 60%);}
-.hero-lines{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(200,169,110,0.02) 80px,rgba(200,169,110,0.02) 81px);}
-.hero-inner{position:relative;text-align:center;max-width:900px;}
-.hero-tag{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(3rem,8vw,7rem);line-height:1.05;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.9s 0.4s forwards;}
-.hero-title em{font-style:italic;color:var(--accent);}
-.hero-sub{font-size:0.8rem;letter-spacing:0.08em;color:var(--muted);max-width:500px;margin:0 auto 3rem;line-height:1.8;opacity:0;animation:fadeUp 0.9s 0.6s forwards;}
-.hero-cta{display:inline-flex;align-items:center;gap:1rem;padding:1rem 2.5rem;border:0.5px solid var(--accent);color:var(--accent);text-decoration:none;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s;opacity:0;animation:fadeUp 0.9s 0.8s forwards;}
-.hero-cta:hover{background:var(--accent);color:var(--bg);}
-.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);animation:fadeUp 1s 1.2s both;}
-.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2s infinite;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.75rem 5rem;transition:all 0.4s;}
+nav.scrolled{background:rgba(6,6,8,0.93);backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border);}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;letter-spacing:0.12em;color:var(--text);}
+.logo span{color:var(--gold);}
+.nav-links{display:flex;gap:3rem;align-items:center;}
+.nav-links a{text-decoration:none;font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);transition:color 0.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{padding:0.6rem 1.5rem !important;border:0.5px solid var(--gold);color:var(--gold) !important;transition:all 0.3s !important;}
+.nav-cta:hover{background:var(--gold) !important;color:var(--bg) !important;}
+.nav-cta::after{display:none !important;}
 
-#about{padding:8rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;max-width:1200px;margin:0 auto;}
-.about-label{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;}
-.about-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.5rem);line-height:1.15;margin-bottom:2rem;}
-.about-text{font-size:0.78rem;color:var(--muted);line-height:2;margin-bottom:1.5rem;}
-.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;padding-top:3rem;border-top:0.5px solid var(--border);}
-.stat-num{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--accent);display:block;}
-.stat-label{font-size:0.65rem;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-top:0.25rem;}
-.about-visual{position:relative;height:400px;}
-.about-card{position:absolute;background:var(--surface);border:0.5px solid var(--border);padding:2rem;}
-.about-card:nth-child(1){top:0;left:0;right:3rem;bottom:3rem;}
-.about-card:nth-child(2){top:3rem;left:3rem;right:0;bottom:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;}
-.card-icon{width:60px;height:60px;border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.5rem;}
-.card-label{font-size:0.65rem;letter-spacing:0.15em;color:var(--muted);text-align:center;text-transform:uppercase;}
-.film-strip{display:flex;flex-direction:column;gap:8px;height:100%;}
-.film-frame{flex:1;background:var(--surface2);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;}
+#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:10rem 5rem 5rem;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,83,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,83,0.025) 1px,transparent 1px);background-size:80px 80px;}
+.hero-glow{position:absolute;top:15%;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(212,168,83,0.07) 0%,transparent 65%);pointer-events:none;}
+.hero-glow2{position:absolute;bottom:-5%;right:5%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(192,57,43,0.04) 0%,transparent 65%);pointer-events:none;}
+.hero-inner{position:relative;text-align:center;max-width:1000px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:1rem;font-size:0.58rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.8s 0.3s forwards;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:30px;height:1px;background:var(--gold);opacity:0.5;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,9vw,9rem);font-weight:300;line-height:0.92;margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s 0.5s forwards;letter-spacing:-0.02em;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-title strong{font-weight:600;display:block;}
+.hero-sub{font-size:0.75rem;font-weight:400;letter-spacing:0.06em;color:var(--muted2);max-width:460px;margin:0 auto 3.5rem;line-height:2;opacity:0;animation:fadeUp 0.9s 0.7s forwards;}
+.hero-btns{display:flex;gap:1.5rem;justify-content:center;opacity:0;animation:fadeUp 0.9s 0.9s forwards;}
+.btn-primary{padding:1rem 2.8rem;background:var(--gold);color:var(--bg);font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);}
+.btn-secondary{padding:1rem 2.8rem;border:0.5px solid var(--border2);color:var(--muted2);font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+.hero-scroll{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.75rem;opacity:0;animation:fadeUp 1s 1.3s forwards;}
+.scroll-text{font-size:0.52rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);}
+.scroll-bar{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s infinite;}
+.hero-badge{position:absolute;right:5rem;bottom:10rem;opacity:0;animation:fadeUp 1s 1.1s forwards;}
+.badge-inner{width:100px;height:100px;border:0.5px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:rotateSlow 20s linear infinite;}
+.badge-text{font-size:0.45rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);text-align:center;line-height:1.8;}
 
-#portfolio{padding:8rem 4rem;max-width:1200px;margin:0 auto;}
-.section-header{display:flex;align-items:baseline;gap:2rem;margin-bottom:4rem;}
-.section-label{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);}
-.portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
-.portfolio-item{position:relative;overflow:hidden;cursor:pointer;}
-.portfolio-thumb{background:var(--surface);border:0.5px solid var(--border);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:border-color 0.3s;}.portfolio-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
-.portfolio-item:nth-child(1) .portfolio-thumb{background:linear-gradient(135deg,#0d0d0d 0%,#1a1210 100%);}
-.portfolio-item:nth-child(2) .portfolio-thumb{background:linear-gradient(135deg,#0d0d0d 0%,#101218 100%);}
-.portfolio-item:nth-child(3) .portfolio-thumb{background:linear-gradient(135deg,#0d0d0d 0%,#0d1210 100%);grid-column:1/3;}
-.portfolio-thumb:hover{border-color:var(--accent);}
-.play-btn{width:56px;height:56px;border:1px solid rgba(200,169,110,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:1.2rem;transition:all 0.3s;}
-.portfolio-thumb:hover .play-btn{background:var(--accent);color:var(--bg);border-color:var(--accent);}
-.thumb-label{position:absolute;bottom:0;left:0;right:0;padding:1.25rem;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);}
-.thumb-niche{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:0.25rem;}
-.thumb-title{font-family:'Playfair Display',serif;font-size:1rem;}
-.item-wide .thumb-label{display:flex;justify-content:space-between;align-items:flex-end;}
-.item-wide .thumb-meta{font-size:0.65rem;color:var(--muted);}
+.marquee-wrap{padding:1.25rem 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);overflow:hidden;background:var(--surface);}
+.marquee-track{display:flex;white-space:nowrap;animation:marquee 28s linear infinite;}
+.marquee-item{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;font-weight:300;color:var(--muted);padding:0 2.5rem;letter-spacing:0.05em;}
+.marquee-item span{color:var(--gold);margin-left:2.5rem;}
 
-#services{padding:8rem 4rem;background:var(--surface);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);}
-.services-inner{max-width:1200px;margin:0 auto;}
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:4rem;border:0.5px solid var(--border);}
-.service-card{padding:2.5rem;border-right:0.5px solid var(--border);transition:background 0.3s;}
-.service-card:last-child{border-right:none;}
-.service-card:hover{background:var(--surface2);}
-.service-num{font-size:0.6rem;letter-spacing:0.2em;color:var(--accent);margin-bottom:2rem;}
-.service-name{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:1rem;line-height:1.3;}
-.service-desc{font-size:0.72rem;color:var(--muted);line-height:1.9;margin-bottom:2rem;}
-.service-tags{display:flex;flex-wrap:wrap;gap:0.5rem;}
-.service-tag{font-size:0.6rem;letter-spacing:0.1em;padding:3px 10px;border:0.5px solid var(--border);color:var(--muted);}
+#about{padding:10rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center;max-width:1300px;margin:0 auto;}
+.about-label{font-size:0.52rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:flex;align-items:center;gap:1rem;}
+.about-label::before{content:'';width:24px;height:1px;background:var(--gold);}
+.about-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,4vw,4rem);font-weight:300;line-height:1.1;margin-bottom:2.5rem;}
+.about-heading em{font-style:italic;color:var(--gold);}
+.about-text{font-size:0.72rem;color:var(--muted2);line-height:2.1;margin-bottom:1.5rem;}
+.about-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:4rem;padding-top:3rem;border-top:0.5px solid var(--border);}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--gold);display:block;line-height:1;}
+.stat-label{font-size:0.55rem;font-weight:700;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-top:0.5rem;display:block;}
+.about-img-box{position:relative;height:520px;}
+.about-box-main{position:absolute;top:0;left:0;right:4rem;bottom:4rem;background:var(--surface);border:0.5px solid var(--border);overflow:hidden;}
+.about-box-accent{position:absolute;bottom:0;right:0;width:200px;height:200px;background:var(--surface2);border:0.5px solid var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;}
+.accent-icon{font-size:2.2rem;color:var(--gold);}
+.accent-text{font-size:0.55rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted2);text-align:center;line-height:1.8;}
+.niches-list{display:flex;flex-direction:column;height:100%;}
+.niche-item{flex:1;display:flex;align-items:center;padding:0 1.5rem;border-bottom:0.5px solid var(--border);font-size:0.6rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);transition:all 0.3s;}
+.niche-item:last-child{border-bottom:none;}
+.niche-item:hover{color:var(--gold);background:rgba(212,168,83,0.04);padding-left:2rem;}
+.niche-item::before{content:'//';margin-right:0.75rem;color:var(--gold);opacity:0.4;font-size:0.45rem;}
 
-#contact{padding:8rem 4rem;max-width:900px;margin:0 auto;text-align:center;}
-.contact-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,5rem);line-height:1.1;margin-bottom:1.5rem;}
-.contact-title em{font-style:italic;color:var(--accent);}
-.contact-sub{font-size:0.78rem;color:var(--muted);letter-spacing:0.05em;line-height:1.8;margin-bottom:3rem;}
-.contact-form{display:flex;flex-direction:column;gap:1rem;text-align:left;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.form-group{display:flex;flex-direction:column;gap:0.5rem;}
-.form-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
-.form-input{background:var(--surface);border:0.5px solid var(--border);padding:0.85rem 1.1rem;color:var(--text);font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;transition:border-color 0.3s;}
-.form-input:focus{border-color:var(--accent);}
-textarea.form-input{resize:vertical;min-height:120px;}
-.form-btn{margin-top:1rem;padding:1.1rem 3rem;background:var(--accent);color:var(--bg);border:none;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:opacity 0.3s;align-self:flex-start;}
-.form-btn:hover{opacity:0.85;}
+#portfolio{padding:10rem 5rem;max-width:1300px;margin:0 auto;}
+.section-eyebrow{font-size:0.52rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--gold);}
+.section-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;margin-bottom:5rem;letter-spacing:-0.01em;}
+.section-heading em{font-style:italic;color:var(--gold);}
+.portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
+.p-item{position:relative;}
+.p-thumb{aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--surface);border:0.5px solid var(--border);transition:border-color 0.4s;}
+.p-thumb:hover{border-color:var(--border2);}
+.p-thumb img.thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease,opacity 0.3s;}
+.p-item:hover .thumb-img{transform:scale(1.05);}
+.hover-play-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;opacity:0;transition:opacity 0.3s;background:rgba(0,0,0,0.45);}
+.play-circle{width:64px;height:64px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.2rem;transition:all 0.3s;}
+.p-item:hover .hover-play-icon{opacity:1;}
+.p-item:hover .play-circle{background:var(--gold);color:var(--bg);}
+.p-info{padding:1.25rem 0 0;display:flex;justify-content:space-between;align-items:baseline;}
+.p-niche{font-size:0.52rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);}
+.p-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;margin-top:0.2rem;}
+.p-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--muted);opacity:0.3;line-height:1;}
 
-footer{padding:2rem 4rem;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.footer-copy{font-size:0.65rem;color:var(--muted);}
-.footer-socials{display:flex;gap:1.5rem;}
-.footer-socials a{font-size:0.65rem;letter-spacing:0.1em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.3s;}
-.footer-socials a:hover{color:var(--accent);}
+.shorts-section{margin-top:5rem;padding-top:4rem;border-top:0.5px solid var(--border);}
+.shorts-label{font-size:0.52rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--muted);margin-bottom:3rem;display:flex;align-items:center;gap:1rem;}
+.shorts-label::before{content:'';width:24px;height:1px;background:var(--muted);}
+.shorts-grid{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;}
+.short-item{display:flex;flex-direction:column;align-items:center;}
+.short-thumb{width:220px;aspect-ratio:9/16;position:relative;overflow:hidden;border:0.5px solid var(--border);background:var(--surface);border-radius:2px;transition:border-color 0.4s;}
+.short-thumb:hover{border-color:var(--border2);}
+.short-thumb img.thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;}
+.short-item:hover .short-thumb img.thumb-img{transform:scale(1.05);}
+.short-thumb .hover-play-icon{border-radius:2px;}
+.short-info{margin-top:1.25rem;text-align:center;}
+.short-niche{font-size:0.5rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);}
+.short-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400;margin-top:0.25rem;}
 
-.hover-play-icon{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1;font-size:2rem;color:var(--accent);opacity:0;transition:opacity 0.3s;background:rgba(0,0,0,0.3);}
-.hover-video:hover .hover-play-icon{opacity:1;}
+#services{padding:10rem 5rem;background:var(--surface);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);}
+.services-inner{max-width:1300px;margin:0 auto;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:5rem;border:0.5px solid var(--border);}
+.svc-card{padding:3rem;border-right:0.5px solid var(--border);position:relative;overflow:hidden;transition:background 0.4s;}
+.svc-card:last-child{border-right:none;}
+.svc-card:hover{background:var(--surface2);}
+.svc-num{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:var(--gold);opacity:0.12;line-height:1;margin-bottom:2rem;}
+.svc-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;margin-bottom:1.25rem;line-height:1.25;}
+.svc-desc{font-size:0.68rem;color:var(--muted2);line-height:2;margin-bottom:2.5rem;}
+.svc-tags{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.svc-tag{font-size:0.52rem;font-weight:700;letter-spacing:0.12em;padding:4px 12px;border:0.5px solid var(--border);color:var(--muted);text-transform:uppercase;transition:all 0.3s;}
+.svc-card:hover .svc-tag{border-color:var(--border2);color:var(--gold);}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-@keyframes scrollPulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+#contact{padding:10rem 5rem;max-width:900px;margin:0 auto;text-align:center;}
+.contact-eyebrow{font-size:0.52rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:1rem;}
+.contact-eyebrow::before,.contact-eyebrow::after{content:'';width:24px;height:1px;background:var(--gold);}
+.contact-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,6rem);font-weight:300;line-height:1;margin-bottom:1.5rem;letter-spacing:-0.02em;}
+.contact-title em{font-style:italic;color:var(--gold);}
+.contact-sub{font-size:0.72rem;color:var(--muted2);line-height:2;margin-bottom:4rem;}
+.contact-form{display:flex;flex-direction:column;gap:1.25rem;text-align:left;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.form-group{display:flex;flex-direction:column;gap:0.6rem;}
+.form-label{font-size:0.52rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);}
+.form-input{background:var(--surface);border:0.5px solid var(--border);padding:1rem 1.25rem;color:var(--text);font-family:'Syne',sans-serif;font-size:0.72rem;outline:none;transition:border-color 0.3s;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted);}
+textarea.form-input{resize:vertical;min-height:130px;}
+.form-btn{margin-top:0.5rem;padding:1.1rem 3.5rem;background:var(--gold);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;align-self:flex-start;}
+.form-btn:hover{background:var(--gold2);transform:translateY(-2px);}
+
+footer{padding:2.5rem 5rem;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface);}
+.footer-copy{font-size:0.58rem;color:var(--muted);}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--muted2);}
+.footer-logo span{color:var(--gold);}
+.footer-socials{display:flex;gap:2rem;}
+.footer-socials a{font-size:0.55rem;font-weight:700;letter-spacing:0.15em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.3s;}
+.footer-socials a:hover{color:var(--gold);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scrollPulse{0%,100%{opacity:0.2;}50%{opacity:1;}}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes rotateSlow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 @media(max-width:768px){
-  nav{padding:1.2rem 1.5rem;}
+  body{cursor:auto;}
+  .cursor,.cursor-ring{display:none;}
+  nav{padding:1.25rem 1.5rem;}
   .nav-links{display:none;}
-  #hero,#about,#portfolio,#services,#contact{padding:5rem 1.5rem;}
-  #about{grid-template-columns:1fr;gap:3rem;}
-  .about-visual{height:250px;}
-  .portfolio-grid{grid-template-columns:1fr;}
-  .portfolio-item:nth-child(3){grid-column:auto;}
-  .portfolio-item:nth-child(3) .portfolio-thumb{grid-column:auto;}
+  #hero{padding:8rem 1.5rem 5rem;}
+  .hero-badge{display:none;}
+  #about{padding:5rem 1.5rem;grid-template-columns:1fr;gap:3rem;}
+  .about-img-box{height:300px;}
+  #portfolio{padding:5rem 1.5rem;}
+  .portfolio-grid{grid-template-columns:1fr;gap:2rem;}
+  #services{padding:5rem 1.5rem;}
   .services-grid{grid-template-columns:1fr;}
-  .service-card{border-right:none;border-bottom:0.5px solid var(--border);}
+  .svc-card{border-right:none;border-bottom:0.5px solid var(--border);}
+  #contact{padding:5rem 1.5rem;}
   .form-row{grid-template-columns:1fr;}
-  footer{flex-direction:column;gap:1rem;text-align:center;}
-
-  /* Mobile video fixes */
-  .portfolio-grid{gap:2rem;}
-  .portfolio-item{width:100%;}
-
-  /* 9:16 vertical videos stack vertically and go full width on mobile */
-  .portfolio-item[style*="grid-column:1/3"]{grid-column:auto!important;}
-  .portfolio-item > div[style*="flex-direction:row"]{
-    flex-direction:column!important;
-    align-items:center!important;
-    gap:2.5rem!important;
-  }
-  /* Make 9:16 videos wider on mobile */
-  .portfolio-item > div[style*="flex-direction:row"] > div > div[style*="width:260px"],
-  div[style*="width:260px"]{
-    width:85vw!important;
-    max-width:340px!important;
-  }
+  footer{flex-direction:column;gap:1.25rem;text-align:center;padding:2rem 1.5rem;}
+  .shorts-grid{flex-direction:column;align-items:center;}
+  .short-thumb{width:85vw;max-width:320px;}
 }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">NBX Studio</div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="navbar">
+  <div class="logo">NBX<span>.</span>Studio</div>
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#portfolio">Work</a>
     <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
   </div>
 </nav>
 
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-lines"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
   <div class="hero-inner">
-    <div class="hero-tag">Video Editing Agency — Est. 2024</div>
-    <h1 class="hero-title">We Make <em>Creators</em><br>Look Cinematic</h1>
-    <p class="hero-sub">Premium video editing for YouTubers, AI creators, coaches & lifestyle brands. Your story, elevated.</p>
-    <a href="#portfolio" class="hero-cta">View Our Work →</a>
+    <div class="hero-eyebrow">Video Editing Agency — Est. 2024</div>
+    <h1 class="hero-title">We Make<br><em>Creators</em><strong>Look Cinematic</strong></h1>
+    <p class="hero-sub">Premium video editing for YouTubers, AI creators, coaches & lifestyle brands. Your story, elevated frame by frame.</p>
+    <div class="hero-btns">
+      <a href="#portfolio" class="btn-primary">View Our Work</a>
+      <a href="#contact" class="btn-secondary">Work With Us</a>
+    </div>
   </div>
   <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+  <div class="hero-badge">
+    <div class="badge-inner">
+      <div class="badge-text">NBX<br>STUDIO<br>✦<br>2024</div>
+    </div>
   </div>
 </section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">YouTube Editing <span>✦</span></span>
+    <span class="marquee-item">AI Content <span>✦</span></span>
+    <span class="marquee-item">Cinematic Reels <span>✦</span></span>
+    <span class="marquee-item">Short Form <span>✦</span></span>
+    <span class="marquee-item">Lifestyle Vlogs <span>✦</span></span>
+    <span class="marquee-item">Horror Stories <span>✦</span></span>
+    <span class="marquee-item">Fitness Content <span>✦</span></span>
+    <span class="marquee-item">48h Delivery <span>✦</span></span>
+    <span class="marquee-item">YouTube Editing <span>✦</span></span>
+    <span class="marquee-item">AI Content <span>✦</span></span>
+    <span class="marquee-item">Cinematic Reels <span>✦</span></span>
+    <span class="marquee-item">Short Form <span>✦</span></span>
+    <span class="marquee-item">Lifestyle Vlogs <span>✦</span></span>
+    <span class="marquee-item">Horror Stories <span>✦</span></span>
+    <span class="marquee-item">Fitness Content <span>✦</span></span>
+    <span class="marquee-item">48h Delivery <span>✦</span></span>
+  </div>
+</div>
 
 <section id="about">
   <div>
     <div class="about-label">About the Studio</div>
-    <h2 class="about-title">Built for Creators<br>Who Think in Frames</h2>
+    <h2 class="about-heading">Built for <em>Creators</em><br>Who Think in Frames</h2>
     <p class="about-text">We're a boutique video editing agency obsessed with one thing — making your content impossible to scroll past. From YouTube long-forms to Instagram Reels, we handle the edit so you can focus on creating.</p>
-    <p class="about-text">Every project is approached like a film — with intention, rhythm, and story at the core.</p>
+    <p class="about-text">Every project is approached like a film — with intention, rhythm, and story at the core. We don't just cut clips. We build experiences.</p>
     <div class="about-stats">
-      <div>
-        <span class="stat-num">50+</span>
-        <span class="stat-label">Creators Served</span>
-      </div>
-      <div>
-        <span class="stat-num">3×</span>
-        <span class="stat-label">Avg Watch Time</span>
-      </div>
-      <div>
-        <span class="stat-num">48h</span>
-        <span class="stat-label">Turnaround</span>
-      </div>
+      <div><span class="stat-num">50+</span><span class="stat-label">Creators Served</span></div>
+      <div><span class="stat-num">3×</span><span class="stat-label">Avg Watch Time</span></div>
+      <div><span class="stat-num">48h</span><span class="stat-label">Turnaround</span></div>
     </div>
   </div>
-  <div class="about-visual">
-    <div class="about-card">
-      <div class="film-strip">
-        <div class="film-frame">[ LIFESTYLE ]</div>
-        <div class="film-frame">[ GAMING ]</div>
-        <div class="film-frame">[ EDUCATION ]</div>
-        <div class="film-frame">[ AI CONTENT ]</div>
+  <div>
+    <div class="about-img-box">
+      <div class="about-box-main">
+        <div class="niches-list">
+          <div class="niche-item">Lifestyle & Vlogs</div>
+          <div class="niche-item">Gaming Content</div>
+          <div class="niche-item">Education & Coaching</div>
+          <div class="niche-item">AI Video & Images</div>
+          <div class="niche-item">Fitness & Health</div>
+          <div class="niche-item">Horror & Stories</div>
+        </div>
       </div>
-    </div>
-    <div class="about-card">
-      <div>
-        <div class="card-icon">▶</div>
-        <div class="card-label">Premium Edits<br>Delivered Fast</div>
+      <div class="about-box-accent">
+        <div class="accent-icon">▶</div>
+        <div class="accent-text">Premium Edits<br>Delivered Fast</div>
       </div>
     </div>
   </div>
 </section>
 
 <section id="portfolio">
-  <div class="section-header">
-    <span class="section-label">Selected Work</span>
-    <h2 class="section-title">Our Portfolio</h2>
-  </div>
+  <div class="section-eyebrow">Selected Work</div>
+  <h2 class="section-heading">Our <em>Portfolio</em></h2>
   <div class="portfolio-grid">
 
-    <!-- Fitness -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="h2Cp37g1s1k" style="padding:0;overflow:hidden;cursor:pointer;">
-        <img src="https://img.youtube.com/vi/h2Cp37g1s1k/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="h2Cp37g1s1k">
+        <img src="https://img.youtube.com/vi/h2Cp37g1s1k/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">Fitness</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">Fitness</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">Fitness</div><div class="p-title">Fitness</div></div><div class="p-num">01</div></div>
     </div>
 
-    <!-- AI Automation -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="tPxYG-rmRRA" style="padding:0;overflow:hidden;cursor:pointer;">
-        <img src="https://img.youtube.com/vi/tPxYG-rmRRA/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="tPxYG-rmRRA">
+        <img src="https://img.youtube.com/vi/tPxYG-rmRRA/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">AI</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">AI Automation</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">AI</div><div class="p-title">AI Automation</div></div><div class="p-num">02</div></div>
     </div>
 
-    <!-- Free AI Video & Image Generators -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="IE7RIUh-11M" style="padding:0;overflow:hidden;cursor:pointer;">
-        <img src="https://img.youtube.com/vi/IE7RIUh-11M/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="IE7RIUh-11M">
+        <img src="https://img.youtube.com/vi/IE7RIUh-11M/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">AI Tools</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">Free AI Video & Image Generators</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">AI Tools</div><div class="p-title">Free AI Video & Image Generators</div></div><div class="p-num">03</div></div>
     </div>
 
-    <!-- Horror Type Stories -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="Co-m5UaE_dI" style="padding:0;overflow:hidden;cursor:pointer;background:#000;">
-        <img src="https://img.youtube.com/vi/Co-m5UaE_dI/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="Co-m5UaE_dI">
+        <img src="https://img.youtube.com/vi/Co-m5UaE_dI/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">Horror</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">Horror Type Stories</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">Horror</div><div class="p-title">Horror Type Stories</div></div><div class="p-num">04</div></div>
     </div>
 
-    <!-- AI Automation new -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="SwbI-s6Zqno" style="padding:0;overflow:hidden;cursor:pointer;">
-        <img src="https://img.youtube.com/vi/SwbI-s6Zqno/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="SwbI-s6Zqno">
+        <img src="https://img.youtube.com/vi/SwbI-s6Zqno/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">AI</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">AI Automation</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">AI</div><div class="p-title">AI Automation</div></div><div class="p-num">05</div></div>
     </div>
 
-    <!-- AI Tools & Monetization -->
-    <div class="portfolio-item">
-      <div class="portfolio-thumb hover-video" data-id="SwbI-s6Zqno" style="padding:0;overflow:hidden;cursor:pointer;">
-        <img src="https://img.youtube.com/vi/SwbI-s6Zqno/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-        <div class="hover-play-icon">▶</div>
+    <div class="p-item">
+      <div class="p-thumb hover-video" data-id="0LNEzNcS0mw">
+        <img src="https://img.youtube.com/vi/0LNEzNcS0mw/maxresdefault.jpg" class="thumb-img"/>
+        <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div style="padding:0.75rem 0 0;">
-        <div class="thumb-niche">AI</div>
-        <div style="font-family:'Playfair Display',serif;font-size:0.95rem;margin-top:2px;">AI Tools & Monetization</div>
-      </div>
+      <div class="p-info"><div><div class="p-niche">AI</div><div class="p-title">AI Tools & Monetization</div></div><div class="p-num">06</div></div>
     </div>
 
-    <!-- 9:16 vertical videos row -->
-    <div class="portfolio-item" style="grid-column:1/3;display:flex;flex-direction:row;justify-content:center;gap:2rem;margin-top:1rem;flex-wrap:wrap;">
+  </div>
 
-      <!-- Cinematic Reels -->
-      <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="thumb-niche" style="margin-bottom:0.75rem;text-align:center;">Short Form · 9:16</div>
-        <div class="hover-video" data-id="ATqWx5TPTsw" style="width:260px;aspect-ratio:9/16;position:relative;overflow:hidden;border:0.5px solid var(--border);background:#000;border-radius:8px;cursor:pointer;">
-          <img src="https://img.youtube.com/vi/ATqWx5TPTsw/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-          <div class="hover-play-icon">▶</div>
+  <div class="shorts-section">
+    <div class="shorts-label">Short Form · 9:16</div>
+    <div class="shorts-grid">
+      <div class="short-item">
+        <div class="short-thumb hover-video" data-id="ATqWx5TPTsw">
+          <img src="https://img.youtube.com/vi/ATqWx5TPTsw/maxresdefault.jpg" class="thumb-img"/>
+          <div class="hover-play-icon"><div class="play-circle">▶</div></div>
         </div>
-        <div style="margin-top:0.75rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:0.95rem;">Cinematic Reels</div>
-        </div>
+        <div class="short-info"><div class="short-niche">Short Form</div><div class="short-title">Cinematic Reels</div></div>
       </div>
-
-      <!-- Travel Shorts -->
-      <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="thumb-niche" style="margin-bottom:0.75rem;text-align:center;">Short Form · 9:16</div>
-        <div class="hover-video" data-id="VnqVs7jkZ3Y" style="width:260px;aspect-ratio:9/16;position:relative;overflow:hidden;border:0.5px solid var(--border);background:#000;border-radius:8px;cursor:pointer;">
-          <img src="https://img.youtube.com/vi/VnqVs7jkZ3Y/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-          <div class="hover-play-icon">▶</div>
+      <div class="short-item">
+        <div class="short-thumb hover-video" data-id="VnqVs7jkZ3Y">
+          <img src="https://img.youtube.com/vi/VnqVs7jkZ3Y/maxresdefault.jpg" class="thumb-img"/>
+          <div class="hover-play-icon"><div class="play-circle">▶</div></div>
         </div>
-        <div style="margin-top:0.75rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:0.95rem;">Travel Shorts</div>
-        </div>
+        <div class="short-info"><div class="short-niche">Travel</div><div class="short-title">Travel Shorts</div></div>
       </div>
-
-      <!-- New Cinematic Reels -->
-      <div style="display:flex;flex-direction:column;align-items:center;">
-        <div class="thumb-niche" style="margin-bottom:0.75rem;text-align:center;">Short Form · 9:16</div>
-        <div class="hover-video" data-id="OTI_yGiLH9c" style="width:260px;aspect-ratio:9/16;position:relative;overflow:hidden;border:0.5px solid var(--border);background:#000;border-radius:8px;cursor:pointer;">
-          <img src="https://img.youtube.com/vi/OTI_yGiLH9c/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 0.3s;" class="thumb-img"/>
-          <div class="hover-play-icon">▶</div>
+      <div class="short-item">
+        <div class="short-thumb hover-video" data-id="OTI_yGiLH9c">
+          <img src="https://img.youtube.com/vi/OTI_yGiLH9c/maxresdefault.jpg" class="thumb-img"/>
+          <div class="hover-play-icon"><div class="play-circle">▶</div></div>
         </div>
-        <div style="margin-top:0.75rem;text-align:center;">
-          <div style="font-family:'Playfair Display',serif;font-size:0.95rem;">Cinematic Reels</div>
-        </div>
+        <div class="short-info"><div class="short-niche">Short Form</div><div class="short-title">Cinematic Reels</div></div>
       </div>
-
     </div>
   </div>
 </section>
 
-<script>
-// Hover to play YouTube videos (hover on desktop, tap on mobile)
-document.querySelectorAll('.hover-video').forEach(function(el) {
-  var id = el.getAttribute('data-id');
-  var iframe = null;
-  var isMobile = window.matchMedia('(max-width:768px)').matches;
-
-  function loadVideo() {
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&mute=1&controls=1&loop=1&playlist=' + id + '&modestbranding=1&rel=0';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;z-index:2;';
-      el.appendChild(iframe);
-      var img = el.querySelector('.thumb-img');
-      var icon = el.querySelector('.hover-play-icon');
-      if (img) img.style.opacity = '0';
-      if (icon) icon.style.opacity = '0';
-    }
-  }
-
-  function unloadVideo() {
-    if (iframe) {
-      iframe.remove();
-      iframe = null;
-      var img = el.querySelector('.thumb-img');
-      var icon = el.querySelector('.hover-play-icon');
-      if (img) img.style.opacity = '1';
-      if (icon) icon.style.opacity = '1';
-    }
-  }
-
-  if (isMobile) {
-    // On mobile: tap to play, tap again to stop
-    el.addEventListener('click', function() {
-      if (iframe) { unloadVideo(); } else { loadVideo(); }
-    });
-    // Show play icon always on mobile
-    var icon = el.querySelector('.hover-play-icon');
-    if (icon) icon.style.opacity = '1';
-  } else {
-    // On desktop: hover to play
-    el.addEventListener('mouseenter', loadVideo);
-    el.addEventListener('mouseleave', unloadVideo);
-  }
-});
-</script>
-
 <section id="services">
   <div class="services-inner">
-    <div class="section-header">
-      <span class="section-label">What We Offer</span>
-      <h2 class="section-title">Services</h2>
-    </div>
+    <div class="section-eyebrow">What We Offer</div>
+    <h2 class="section-heading">Our <em>Services</em></h2>
     <div class="services-grid">
-      <div class="service-card">
-        <div class="service-num">01</div>
-        <div class="service-name">YouTube Long-Form Editing</div>
-        <p class="service-desc">Full video edits with cuts, b-roll, captions, music sync and colour grade. Optimised for watch time and retention.</p>
-        <div class="service-tags">
-          <span class="service-tag">Colour Grade</span>
-          <span class="service-tag">Captions</span>
-          <span class="service-tag">B-Roll</span>
-        </div>
+      <div class="svc-card">
+        <div class="svc-num">01</div>
+        <div class="svc-name">YouTube Long-Form Editing</div>
+        <p class="svc-desc">Full video edits with cuts, b-roll, captions, music sync and colour grade. Optimised for watch time and retention.</p>
+        <div class="svc-tags"><span class="svc-tag">Colour Grade</span><span class="svc-tag">Captions</span><span class="svc-tag">B-Roll</span></div>
       </div>
-      <div class="service-card">
-        <div class="service-num">02</div>
-        <div class="service-name">Short-Form & Reels</div>
-        <p class="service-desc">Punchy, viral-ready edits for Instagram Reels, TikTok, and YouTube Shorts. Fast pacing, hooks, and trend-aligned cuts.</p>
-        <div class="service-tags">
-          <span class="service-tag">Reels</span>
-          <span class="service-tag">TikTok</span>
-          <span class="service-tag">Shorts</span>
-        </div>
+      <div class="svc-card">
+        <div class="svc-num">02</div>
+        <div class="svc-name">Short-Form & Reels</div>
+        <p class="svc-desc">Punchy, viral-ready edits for Instagram Reels, TikTok, and YouTube Shorts. Fast pacing, hooks, and trend-aligned cuts.</p>
+        <div class="svc-tags"><span class="svc-tag">Reels</span><span class="svc-tag">TikTok</span><span class="svc-tag">Shorts</span></div>
       </div>
-      <div class="service-card">
-        <div class="service-num">03</div>
-        <div class="service-name">AI Content Editing</div>
-        <p class="service-desc">Specialised editing for AI-generated footage — Sora, Runway, Kling. We turn raw AI clips into polished, story-driven videos.</p>
-        <div class="service-tags">
-          <span class="service-tag">Sora</span>
-          <span class="service-tag">Runway</span>
-          <span class="service-tag">Kling</span>
-        </div>
+      <div class="svc-card">
+        <div class="svc-num">03</div>
+        <div class="svc-name">AI Content Editing</div>
+        <p class="svc-desc">Specialised editing for AI-generated footage — Sora, Runway, Kling. We turn raw AI clips into polished, story-driven videos.</p>
+        <div class="svc-tags"><span class="svc-tag">Sora</span><span class="svc-tag">Runway</span><span class="svc-tag">Kling</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <section id="contact">
-  <div class="section-label" style="margin-bottom:1.5rem;">Get In Touch</div>
+  <div class="contact-eyebrow">Get In Touch</div>
   <h2 class="contact-title">Ready to <em>Elevate</em><br>Your Content?</h2>
-  <p class="contact-sub">Tell us about your channel and we'll get back to you within 24 hours. First video consultation is free.</p>
+  <p class="contact-sub">Tell us about your channel and we'll get back to you within 24 hours.<br>First video consultation is completely free.</p>
   <div class="contact-form">
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Your Name</label>
-        <input class="form-input" type="text" placeholder="Alex Johnson" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" placeholder="alex@channel.com" />
-      </div>
+      <div class="form-group"><label class="form-label">Your Name</label><input class="form-input" type="text" placeholder="Alex Johnson"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="alex@channel.com"/></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Your Channel / Niche</label>
-      <input class="form-input" type="text" placeholder="e.g. AI tools YouTube channel, 20k subs" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Tell Us About Your Project</label>
-      <textarea class="form-input" placeholder="What kind of editing do you need? How many videos per month?"></textarea>
-    </div>
+    <div class="form-group"><label class="form-label">Your Channel / Niche</label><input class="form-input" type="text" placeholder="e.g. AI tools YouTube channel, 20k subs"/></div>
+    <div class="form-group"><label class="form-label">Tell Us About Your Project</label><textarea class="form-input" placeholder="What kind of editing do you need? How many videos per month?"></textarea></div>
     <button class="form-btn">Send Message →</button>
   </div>
 </section>
 
 <footer>
   <div class="footer-copy">© 2025 NBX Studio. All rights reserved.</div>
+  <div class="footer-logo">NBX<span>.</span>Studio</div>
   <div class="footer-socials">
     <a href="#">Instagram</a>
     <a href="#">YouTube</a>
@@ -463,5 +416,55 @@ document.querySelectorAll('.hover-video').forEach(function(el) {
   </div>
 </footer>
 
+<script>
+// Custom cursor
+var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+if(cursor&&ring){
+  document.addEventListener('mousemove',function(e){
+    cursor.style.left=e.clientX-4+'px';cursor.style.top=e.clientY-4+'px';
+    ring.style.left=e.clientX-18+'px';ring.style.top=e.clientY-18+'px';
+  });
+  document.querySelectorAll('a,button,.hover-video,.short-thumb').forEach(function(el){
+    el.addEventListener('mouseenter',function(){cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.5)';ring.style.borderColor='rgba(212,168,83,0.9)';});
+    el.addEventListener('mouseleave',function(){cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.borderColor='rgba(212,168,83,0.5)';});
+  });
+}
+
+// Sticky nav
+window.addEventListener('scroll',function(){
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// Hover to play
+document.querySelectorAll('.hover-video').forEach(function(el){
+  var id=el.getAttribute('data-id'),iframe=null;
+  var isMobile=window.matchMedia('(max-width:768px)').matches;
+  function load(){
+    if(!iframe){
+      iframe=document.createElement('iframe');
+      iframe.src='https://www.youtube.com/embed/'+id+'?autoplay=1&mute=1&controls=1&loop=1&playlist='+id+'&modestbranding=1&rel=0';
+      iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen=true;
+      iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;z-index:2;';
+      el.appendChild(iframe);
+      var img=el.querySelector('.thumb-img'),icon=el.querySelector('.hover-play-icon');
+      if(img)img.style.opacity='0';if(icon)icon.style.opacity='0';
+    }
+  }
+  function unload(){
+    if(iframe){iframe.remove();iframe=null;
+      var img=el.querySelector('.thumb-img'),icon=el.querySelector('.hover-play-icon');
+      if(img)img.style.opacity='1';if(icon)icon.style.opacity='1';
+    }
+  }
+  if(isMobile){
+    el.addEventListener('click',function(){if(iframe){unload();}else{load();}});
+    var icon=el.querySelector('.hover-play-icon');if(icon)icon.style.opacity='1';
+  }else{
+    el.addEventListener('mouseenter',load);
+    el.addEventListener('mouseleave',unload);
+  }
+});
+</script>
 </body>
 </html>
