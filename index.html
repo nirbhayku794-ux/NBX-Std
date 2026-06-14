@@ -22,10 +22,9 @@
   --border2:rgba(212,168,83,0.28);
 }
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none;}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;}
 
-.cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
-.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(212,168,83,0.5);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.1s ease;}
+
 
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;opacity:0.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
 
@@ -191,8 +190,7 @@ footer{padding:2.5rem 5rem;border-top:0.5px solid var(--border);display:flex;jus
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+
 
 <nav id="navbar">
   <div class="logo">NBX<span>.</span>Studio</div>
@@ -311,11 +309,11 @@ footer{padding:2.5rem 5rem;border-top:0.5px solid var(--border);display:flex;jus
     </div>
 
     <div class="p-item">
-      <div class="p-thumb hover-video" data-id="Co-m5UaE_dI">
-        <img src="https://img.youtube.com/vi/Co-m5UaE_dI/maxresdefault.jpg" class="thumb-img"/>
+      <div class="p-thumb hover-video" data-id="S9XfYKPYLFQ">
+        <img src="https://img.youtube.com/vi/S9XfYKPYLFQ/maxresdefault.jpg" class="thumb-img"/>
         <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div class="p-info"><div><div class="p-niche">Horror</div><div class="p-title">Horror Type Stories</div></div><div class="p-num">04</div></div>
+      <div class="p-info"><div><div class="p-niche">Typography</div><div class="p-title">Typography</div></div><div class="p-num">04</div></div>
     </div>
 
     <div class="p-item">
@@ -330,11 +328,11 @@ footer{padding:2.5rem 5rem;border-top:0.5px solid var(--border);display:flex;jus
     
    
     <div class="p-item">
-      <div class="p-thumb hover-video" data-id="0LNEzNcS0mw">
-        <img src="https://img.youtube.com/vi/0LNEzNcS0mw/maxresdefault.jpg" class="thumb-img"/>
+      <div class="p-thumb hover-video" data-id="1J0KVWQywEQ">
+        <img src="https://img.youtube.com/vi/1J0KVWQywEQ/maxresdefault.jpg" class="thumb-img"/>
         <div class="hover-play-icon"><div class="play-circle">▶</div></div>
       </div>
-      <div class="p-info"><div><div class="p-niche">AI</div><div class="p-title">AI Tools & Monetization</div></div><div class="p-num">06</div></div>
+      <div class="p-info"><div><div class="p-niche">Research</div><div class="p-title">Research</div></div><div class="p-num">06</div></div>
     </div>
 
   </div>
@@ -420,18 +418,7 @@ footer{padding:2.5rem 5rem;border-top:0.5px solid var(--border);display:flex;jus
 </footer>
 
 <script>
-// Custom cursor
-var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-if(cursor&&ring){
-  document.addEventListener('mousemove',function(e){
-    cursor.style.left=e.clientX-4+'px';cursor.style.top=e.clientY-4+'px';
-    ring.style.left=e.clientX-18+'px';ring.style.top=e.clientY-18+'px';
-  });
-  document.querySelectorAll('a,button,.hover-video,.short-thumb').forEach(function(el){
-    el.addEventListener('mouseenter',function(){cursor.style.transform='scale(2.5)';ring.style.transform='scale(1.5)';ring.style.borderColor='rgba(212,168,83,0.9)';});
-    el.addEventListener('mouseleave',function(){cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.borderColor='rgba(212,168,83,0.5)';});
-  });
-}
+
 
 // Sticky nav
 window.addEventListener('scroll',function(){
